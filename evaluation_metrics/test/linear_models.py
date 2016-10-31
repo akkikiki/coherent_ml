@@ -41,7 +41,7 @@ def main():
 	testSet = zip3(classifers,cv,cohere)
 	pipe = pipelines.Pipeline(testSet)
 	scores = pipe.evaluate(data.X,data.y)
-	numpy.savetxt("../data/scores.csv", scores, delimiter=",")
+	np.savetxt("../data/scores.csv", scores, delimiter=",")
 
 	
 

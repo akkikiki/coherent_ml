@@ -44,7 +44,7 @@ def get_classifers():
 		if not isinstance(clfType,list):
 			clfType = [clfType]
 		classifiers += clfType
-	return classifers
+	return classifiers
 	
 def zip3(a1,a2,a3):
 	zipped = []

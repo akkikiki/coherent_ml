@@ -12,7 +12,7 @@ class SentimentData():
 		self.vocab = vocab
 
 def load(domain):
-	dir = '/projects/brro5352/coherent-ml/coherent_ml/datasets/{0}'
+	dir = '/Users/Fujinuma/work/coherent_ml/datasets/{0}'
 	domains = {
 		'books':'books.pkl',
 		'dvd':'dvd.pkl',
@@ -27,6 +27,7 @@ def make():
 	domains = ['books','dvd','electronics','kitchen']
 	fileIn = '/home/{0}/processed_stars/{1}/all_balanced.review'
 	fileOut = '/home/{0}/coherent_ml/datasets/{1}.pkl'
+	user = 'yofu1973'
 	if os.path.isfile(fileOut.format(user,domains[-1])) == False:
 		with open(fileIn.format(user,'all')) as f:
 			lines = f.readlines()

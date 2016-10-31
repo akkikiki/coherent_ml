@@ -1,6 +1,5 @@
 import numpy as np
 import scipy.misc
-import math
 from six.moves import xrange
 
 
@@ -101,9 +100,7 @@ def coherence(coefs, X, M, type='default', dist='cosine'):
     for m in xrange(1, M):
         for l in xrange(0, m - 1):
             if type == 'default':
-                vm = np.nonzero(X[:, topTokens[m]])[0]
-                vl = np.nonzero(X[:, topTokens[l]])[0]
-                vmvl = np.intersect1d(vm, vl)
+                vl, vm, vmvl = calculate_doc_occurence(X, l, m, topTokens)
                 cohere += coherenceMetric(vmvl.shape[0], vm.shape[0], vl.shape[0])
 
             elif type == 'OC-Auto-DS':
@@ -113,20 +110,14 @@ def coherence(coefs, X, M, type='default', dist='cosine'):
                 cohere += coherenceMetric(wi, wj, distribution)
 
             elif type == 'OC-Auto-LCP':
-                vm = np.nonzero(X[:, topTokens[m]])[0]
-                vl = np.nonzero(X[:, topTokens[l]])[0]
-                vmvl = np.intersect1d(vm, vl)
+                vl, vm, vmvl = calculate_doc_occurence(X, l, m, topTokens)
                 Pwjwi = clip(vmvl.shape[0] + 1 / float(numDocs))
                 Pwi = clip(vl.shape[0] / float(numDocs))
                 cohere += coherenceMetric(Pwjwi, Pwi)
 
             else:
                 # PMI or NPMI
-                vm = np.nonzero(X[:, topTokens[m]])[0] # indices that are non-zero
-                vl = np.nonzero(X[:, topTokens[l]])[0] # which docs that this particular token appeared
-                print("vm: %s, vl: %s" % (vm, vl))
-
-                vmvl = np.intersect1d(vm, vl)
+                vl, vm, vmvl = calculate_doc_occurence(X, l, m, topTokens)
                 Pwjwi = clip(vmvl.shape[0] / float(numDocs))
                 Pwi = clip(vl.shape[0] / float(numDocs))
                 Pwj = clip(vm.shape[0] / float(numDocs))
@@ -136,3 +127,9 @@ def coherence(coefs, X, M, type='default', dist='cosine'):
         cohere = cohere / scipy.misc.comb(M, 2)
 
     return cohere
+
+def calculate_doc_occurence(X, l, m, topTokens):
+    vm = np.nonzero(X[:, topTokens[m]])[0] # indices that are non-zero
+    vl = np.nonzero(X[:, topTokens[l]])[0] # which docs that this particular token appeared
+    vmvl = np.intersect1d(vm, vl)
+    return vl, vm, vmvl
